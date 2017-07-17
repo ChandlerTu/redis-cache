@@ -1,5 +1,5 @@
 /**
- *    Copyright 2015-2016 the original author or authors.
+ *    Copyright 2015-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,6 +19,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -35,6 +38,8 @@ public final class RedisTestCase {
 
   @BeforeClass
   public static void newCache() {
+		Path redisProperties = Paths.get(System.getProperty("user.home"), ".ts-result-processing", "redis.properties");
+		System.setProperty("redis.properties.filename", redisProperties.toString());
     cache = new RedisCache(DEFAULT_ID);
   }
 

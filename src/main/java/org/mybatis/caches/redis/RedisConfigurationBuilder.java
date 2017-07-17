@@ -15,6 +15,8 @@
  */
 package org.mybatis.caches.redis;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -78,23 +80,27 @@ final class RedisConfigurationBuilder {
     public RedisConfig parseConfiguration(ClassLoader classLoader) {
         Properties config = new Properties();
 
-        InputStream input = classLoader.getResourceAsStream(redisPropertiesFilename);
-        if (input != null) {
-            try {
-                config.load(input);
-            } catch (IOException e) {
-                throw new RuntimeException(
-                        "An error occurred while reading classpath property '"
-                                + redisPropertiesFilename
-                                + "', see nested exceptions", e);
-            } finally {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    // close quietly
-                }
-            }
-        }
+		// InputStream input =
+		// classLoader.getResourceAsStream(redisPropertiesFilename);
+		try {
+			InputStream input = new FileInputStream(redisPropertiesFilename);
+			if (input != null) {
+				try {
+					config.load(input);
+				} catch (IOException e) {
+					throw new RuntimeException("An error occurred while reading classpath property '"
+							+ redisPropertiesFilename + "', see nested exceptions", e);
+				} finally {
+					try {
+						input.close();
+					} catch (IOException e) {
+						// close quietly
+					}
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 
         RedisConfig jedisConfig = new RedisConfig();
         setConfigProperties(config, jedisConfig);
